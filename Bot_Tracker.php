@@ -121,3 +121,18 @@ function bot_tracker_list_page() {
     echo '</table>';
     echo '</div>';
 }
+
+// Register uninstall hook
+register_uninstall_hook( __FILE__, 'bot_tracker_uninstall' );
+
+// Uninstall function to cleanup the database
+function bot_tracker_uninstall() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'bot_tracker';
+    
+    // Drop the database table
+    $wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+
+    // Clear scheduled cron events
+    wp_clear_scheduled_hook( 'bot_tracker_clear_database' );
+}
