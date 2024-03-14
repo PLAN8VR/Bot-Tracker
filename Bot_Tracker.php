@@ -20,15 +20,20 @@ function bot_tracker_create_table() {
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    dbDelta( $sql );
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
 }
-register_activation_hook( __FILE__, 'bot_tracker_create_table' );
+register_activation_hook(__FILE__, 'bot_tracker_create_table');
 
 // Add visitor to bot tracker if identified as bot
 function bot_tracker_track_visitor() {
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
     $ip_address = $_SERVER['REMOTE_ADDR'];
+
+    // Exclude certain IP addresses from being tracked
+    if ($ip_address == '192.168.1.254') {
+        return; // Skip tracking for this IP address
+    }
 
     // Bot detection logic
     $is_bot = false;
@@ -104,7 +109,7 @@ function bot_tracker_render_page() {
     echo '<th><a href="?page=bot-tracker&orderby=user_agent&order=' . ($orderby == 'user_agent' && $order == 'ASC' ? 'DESC' : 'ASC') . '">User Agent</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=ip_address&order=' . ($orderby == 'ip_address' && $order == 'ASC' ? 'DESC' : 'ASC') . '">IP Address</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=date_visited&order=' . ($orderby == 'date_visited' && $order == 'ASC' ? 'DESC' : 'ASC') . '">Date Visited</a></th>';
-    echo '<th>Bot Type</th>'; 
+    echo '<th>Bot Type</th>';
     echo '</tr></thead>';
     echo '<tbody>';
     foreach ($bot_visitors as $visitor) {
