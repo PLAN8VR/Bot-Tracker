@@ -6,6 +6,7 @@ Version: 0.1
 Author: Andrew Wood
 */
 
+
 // Create database table on plugin activation
 function bot_tracker_create_table() {
     global $wpdb;
@@ -58,8 +59,7 @@ add_action( 'init', 'bot_tracker_track_visitor' );
 // Schedule cron to clear out database every 30 days
 function bot_tracker_schedule_cron() {
     if ( ! wp_next_scheduled( 'bot_tracker_clear_database' ) ) {
-        // Schedule the event to run daily, just to check if it's time to clear the database
-        wp_schedule_event( time(), 'daily', 'bot_tracker_clear_database' );
+        wp_schedule_event( time(), 'monthly', 'bot_tracker_clear_database' );
     }
 }
 add_action( 'wp', 'bot_tracker_schedule_cron' );
@@ -69,10 +69,8 @@ function bot_tracker_clear_database() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'bot_tracker';
 
-    // Calculate date 30 days ago
-    $older_than = date( 'Y-m-d H:i:s', strtotime( '-30 days' ) );
-
     // Delete records older than 30 days
+    $older_than = date( 'Y-m-d H:i:s', strtotime( '-30 days' ) );
     $wpdb->query( $wpdb->prepare( "DELETE FROM $table_name WHERE date_visited < %s", $older_than ) );
 }
 
@@ -86,12 +84,21 @@ function bot_tracker_list_page() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'bot_tracker';
 
-    $bot_visitors = $wpdb->get_results( "SELECT * FROM $table_name" );
+    $orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+    $order = isset( $_GET['order'] ) ? $_GET['order'] : 'ASC';
+
+    $query = "SELECT * FROM $table_name ORDER BY $orderby $order";
+    $bot_visitors = $wpdb->get_results( $query );
 
     echo '<div class="wrap">';
     echo '<h2>Bot Tracker</h2>';
     echo '<table class="wp-list-table widefat fixed striped">';
-    echo '<thead><tr><th>ID</th><th>User Agent</th><th>IP Address</th><th>Date Visited</th></tr></thead>';
+    echo '<thead><tr>';
+    echo '<th><a href="?page=bot-tracker&orderby=id&order=' . ( $orderby == 'id' && $order == 'ASC' ? 'DESC' : 'ASC' ) . '">ID</a></th>';
+    echo '<th><a href="?page=bot-tracker&orderby=user_agent&order=' . ( $orderby == 'user_agent' && $order == 'ASC' ? 'DESC' : 'ASC' ) . '">User Agent</a></th>';
+    echo '<th><a href="?page=bot-tracker&orderby=ip_address&order=' . ( $orderby == 'ip_address' && $order == 'ASC' ? 'DESC' : 'ASC' ) . '">IP Address</a></th>';
+    echo '<th><a href="?page=bot-tracker&orderby=date_visited&order=' . ( $orderby == 'date_visited' && $order == 'ASC' ? 'DESC' : 'ASC' ) . '">Date Visited</a></th>';
+    echo '</tr></thead>';
     echo '<tbody>';
     foreach ($bot_visitors as $visitor) {
         echo '<tr>';
