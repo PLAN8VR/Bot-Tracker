@@ -59,7 +59,8 @@ add_action( 'init', 'bot_tracker_track_visitor' );
 // Schedule cron to clear out database every 30 days
 function bot_tracker_schedule_cron() {
     if ( ! wp_next_scheduled( 'bot_tracker_clear_database' ) ) {
-        wp_schedule_event( time(), 'monthly', 'bot_tracker_clear_database' );
+        // Schedule the event to run daily, just to check if it's time to clear the database
+        wp_schedule_event( time(), 'daily', 'bot_tracker_clear_database' );
     }
 }
 add_action( 'wp', 'bot_tracker_schedule_cron' );
