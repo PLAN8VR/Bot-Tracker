@@ -108,8 +108,8 @@ function bot_tracker_list_page() {
     echo '</tr></thead>';
     echo '<tbody>';
     foreach ($bot_visitors as $visitor) {
-        $is_google = strpos($visitor->user_agent, 'Google') !== false;
-        $row_class = $is_google ? '' : 'not-google';
+        $is_good = (strpos($visitor->user_agent, 'Google') !== false || strpos($visitor->user_agent, 'bingbot') !== false || strpos($visitor->user_agent, 'Applebot') !== false);
+        $row_class = $is_good ? '' : 'not-google';
         echo '<tr class="' . $row_class . '">';
         echo '<td>' . $visitor->id . '</td>';
         echo '<td>' . $visitor->user_agent . '</td>';
