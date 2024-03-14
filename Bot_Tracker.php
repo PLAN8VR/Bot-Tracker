@@ -101,7 +101,12 @@ function bot_tracker_render_page() {
     $orderby = isset($_GET['orderby']) ? $_GET['orderby'] : 'id';
     $order = isset($_GET['order']) ? $_GET['order'] : 'ASC';
 
-    $query = "SELECT * FROM $table_name ORDER BY $orderby $order";
+    // Pagination setup
+    $items_per_page = 100;
+    $current_page = isset($_GET['paged']) && $_GET['paged'] > 0 ? intval($_GET['paged']) : 1;
+    $offset = ($current_page - 1) * $items_per_page;
+
+    $query = "SELECT * FROM $table_name ORDER BY $orderby $order LIMIT $offset, $items_per_page";
     $bot_visitors = $wpdb->get_results($query);
 
     echo '<div class="wrap">';
@@ -131,6 +136,23 @@ function bot_tracker_render_page() {
     }
     echo '</tbody>';
     echo '</table>';
+
+    // Pagination links
+    $total_items = $wpdb->get_var("SELECT COUNT(id) FROM $table_name");
+    $total_pages = ceil($total_items / $items_per_page);
+    echo '<div class="tablenav">';
+    echo '<div class="tablenav-pages">';
+    echo paginate_links(array(
+        'base' => add_query_arg('paged', '%#%'),
+        'format' => '',
+        'prev_text' => __('&laquo; Previous'),
+        'next_text' => __('Next &raquo;'),
+        'total' => $total_pages,
+        'current' => $current_page
+    ));
+    echo '</div>';
+    echo '</div>';
+
     echo '</div>';
 }
 
