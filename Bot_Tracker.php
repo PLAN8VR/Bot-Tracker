@@ -16,6 +16,7 @@ function bot_tracker_create_table() {
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         user_agent text NOT NULL,
         ip_address varchar(100) NOT NULL,
+        url varchar(100) NOT NULL,
         date_visited datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
         PRIMARY KEY  (id)
     ) $charset_collate;";
@@ -28,6 +29,7 @@ register_activation_hook(__FILE__, 'bot_tracker_create_table');
 // Add visitor to bot tracker if identified as bot
 function bot_tracker_track_visitor() {
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $url = $_SERVER['REQUEST_URI'];
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     // Exclude certain IP addresses from being tracked
@@ -54,6 +56,7 @@ function bot_tracker_track_visitor() {
             array(
                 'user_agent' => $user_agent,
                 'ip_address' => $ip_address,
+                'url' => $url,
             )
         );
     }
@@ -109,6 +112,7 @@ function bot_tracker_render_page() {
     echo '<th><a href="?page=bot-tracker&orderby=user_agent&order=' . ($orderby == 'user_agent' && $order == 'ASC' ? 'DESC' : 'ASC') . '">User Agent</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=ip_address&order=' . ($orderby == 'ip_address' && $order == 'ASC' ? 'DESC' : 'ASC') . '">IP Address</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=date_visited&order=' . ($orderby == 'date_visited' && $order == 'ASC' ? 'DESC' : 'ASC') . '">Date Visited</a></th>';
+    echo '<th>url</th>';
     echo '<th>Bot Type</th>';
     echo '</tr></thead>';
     echo '<tbody>';
@@ -121,6 +125,7 @@ function bot_tracker_render_page() {
         echo '<td>' . $visitor->user_agent . '</td>';
         echo '<td>' . $visitor->ip_address . '</td>';
         echo '<td>' . $visitor->date_visited . '</td>';
+        echo '<td>' . $visitor->url . '</td>';
         echo '<td>' . $bot_type . '</td>'; // Output bot type in the new column
         echo '</tr>';
     }
