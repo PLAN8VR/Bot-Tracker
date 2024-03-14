@@ -108,7 +108,7 @@ function bot_tracker_render_page() {
     echo '<tbody>';
     foreach ($bot_visitors as $visitor) {
         $is_good = bot_tracker_is_good_bot($visitor->user_agent);
-        $row_class = $is_good ? '' : 'not-google';
+        $row_class = $is_good ? '' : 'good-bot';
         echo '<tr class="' . $row_class . '">';
         echo '<td>' . $visitor->id . '</td>';
         echo '<td>' . $visitor->user_agent . '</td>';
