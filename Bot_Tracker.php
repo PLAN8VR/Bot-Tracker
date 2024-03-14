@@ -3,7 +3,7 @@
 Plugin Name: Bot Tracker
 Description: This plugin tracks and stores a list of site visitors identified as bots. Additionally, it clears out it's own database every 30 days.
 Version: 0.1
-Author: Andrew Wood
+Author: PLAN8
 */
 
 
