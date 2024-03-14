@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Bot Tracker
-Description: This plugin tracks and stores a list of site visitors identified as bots. Additionally, it clears out it's own database every 30 days.
+Description: This plugin tracks and stores a list of site visitors identified as bots. Additionally, it clears out its own database every 30 days.
 Version: 0.1
 Author: PLAN8
 */
@@ -112,7 +112,7 @@ function bot_tracker_render_page() {
     echo '<th><a href="?page=bot-tracker&orderby=user_agent&order=' . ($orderby == 'user_agent' && $order == 'ASC' ? 'DESC' : 'ASC') . '">User Agent</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=ip_address&order=' . ($orderby == 'ip_address' && $order == 'ASC' ? 'DESC' : 'ASC') . '">IP Address</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=date_visited&order=' . ($orderby == 'date_visited' && $order == 'ASC' ? 'DESC' : 'ASC') . '">Date Visited</a></th>';
-    echo '<th>url</th>';
+    echo '<th>URL</th>';
     echo '<th>Bot Type</th>';
     echo '</tr></thead>';
     echo '<tbody>';
@@ -194,6 +194,28 @@ function bot_tracker_is_good_bot($user_agent) {
     return false;
 }
 
+// Compare the list of good bots before and after settings are saved and remove corresponding database records
+function bot_tracker_compare_good_bots($old_value, $new_value) {
+    if ($old_value !== $new_value) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'bot_tracker';
+
+        $old_bots = explode("\n", $old_value);
+        $new_bots = explode("\n", $new_value);
+
+        // Find bots removed from the list
+        $removed_bots = array_diff($old_bots, $new_bots);
+
+        if (!empty($removed_bots)) {
+            // Delete corresponding records from the database
+            foreach ($removed_bots as $bot) {
+                $wpdb->delete($table_name, array('user_agent' => $bot));
+            }
+        }
+    }
+}
+add_action('update_option_bot_tracker_good_bots', 'bot_tracker_compare_good_bots', 10, 2);
+
 // Register uninstall hook
 register_uninstall_hook(__FILE__, 'bot_tracker_uninstall');
 
@@ -208,3 +230,4 @@ function bot_tracker_uninstall() {
     // Clear scheduled cron events
     wp_clear_scheduled_hook('bot_tracker_clear_database');
 }
+?>
