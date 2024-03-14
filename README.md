@@ -4,4 +4,4 @@ The addon creates a basic admin page (accessed on the sidepanel in wp-admin) tha
 
 The addon clears out any dtatbase entries older than 30 days.
 
-To Install, Download everything, put it into a zip folder, and install as usual with wordpress.
+To Install, Download "as zip", and install as usual with wordpress.
