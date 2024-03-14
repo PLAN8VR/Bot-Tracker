@@ -2,5 +2,5 @@
 tr.not-google {
     background-color: #ffe6e6; /* Light red background */
     color: #cc0000; /* Dark red text color */
-    font-weight: bold; /* Bold font */
+    font-weight: bolder; /* Bolder font */
 }
