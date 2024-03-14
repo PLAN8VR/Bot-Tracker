@@ -104,16 +104,19 @@ function bot_tracker_render_page() {
     echo '<th><a href="?page=bot-tracker&orderby=user_agent&order=' . ($orderby == 'user_agent' && $order == 'ASC' ? 'DESC' : 'ASC') . '">User Agent</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=ip_address&order=' . ($orderby == 'ip_address' && $order == 'ASC' ? 'DESC' : 'ASC') . '">IP Address</a></th>';
     echo '<th><a href="?page=bot-tracker&orderby=date_visited&order=' . ($orderby == 'date_visited' && $order == 'ASC' ? 'DESC' : 'ASC') . '">Date Visited</a></th>';
+    echo '<th>Bot Type</th>'; 
     echo '</tr></thead>';
     echo '<tbody>';
     foreach ($bot_visitors as $visitor) {
         $is_good = bot_tracker_is_good_bot($visitor->user_agent);
+        $bot_type = $is_good ? 'Good Bot' : '** Bad Bot ??'; // Determine bot type
         $row_class = $is_good ? '' : 'not-google';
         echo '<tr class="' . $row_class . '">';
         echo '<td>' . $visitor->id . '</td>';
         echo '<td>' . $visitor->user_agent . '</td>';
         echo '<td>' . $visitor->ip_address . '</td>';
         echo '<td>' . $visitor->date_visited . '</td>';
+        echo '<td>' . $bot_type . '</td>'; // Output bot type in the new column
         echo '</tr>';
     }
     echo '</tbody>';
