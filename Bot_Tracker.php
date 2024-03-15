@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Bot Tracker
+Plugin Name: Good Bot / Bad Bot
 Description: This plugin tracks and stores a list of site visitors identified as bots. Additionally, it clears out its own database every 30 days.
 Version: 0.0.1
 Author: PLAN8

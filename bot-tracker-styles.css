@@ -4,3 +4,7 @@ tr.not-google {
     color: #cc0000; /* Dark red text color */
     font-weight: bolder; /* Bolder font */
 }
+
+.widefat * {
+    word-wrap: normal;
+}
