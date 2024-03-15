@@ -6,6 +6,7 @@ Version: 0.0.2
 Author: PLAN8
 Author URI: https://plan8.earth
 License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 */
 
