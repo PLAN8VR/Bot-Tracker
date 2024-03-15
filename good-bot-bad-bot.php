@@ -3,7 +3,7 @@
 Plugin Name: Good Bot / Bad Bot
 Description: This plugin tracks and stores a list of site visitors identified as bots. Additionally, it clears out its own database every 30 days.
 Version: 0.0.2
-Author: PLAN8
+Author: PLAN8 
 */
 
 // Create database table on plugin activation
