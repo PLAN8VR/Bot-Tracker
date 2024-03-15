@@ -1,3 +1,15 @@
+=== Good Bot / Bad Bot - Keep track of what bots crawl your wordpress site ===
+Contributors: PLAN8
+Tags: bots, security, firewall
+Requires at least: 5.7
+Tested up to: 6.4.3
+Stable tag: 0.0.2
+Requires PHP: 7.1
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+== Description ==
+
 A simple Wordpress addon that stores an sql database list of visitors to the site that identify as "Bot", "spider" or crawler etc in order to help keep an eye out for "Bad bots" scraping your site. 
 
 The addon creates a basic admin page (accessed on the sidepanel in wp-admin) that lists all the visitors considered bots for the last 30 days. 
